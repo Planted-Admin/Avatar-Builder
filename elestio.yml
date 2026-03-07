@@ -1,0 +1,20 @@
+# Elestio deployment config - place this at the ROOT of your Git repository
+# If your repo root is the parent "Avatar Builder" folder, move this file there
+# and ensure install/build/run commands run from the correct directory.
+config:
+  runTime: "NodeJs"
+  version: "22"
+  framework: "Vite"
+  installCommand: "yarn install"
+  buildCommand: "yarn build"
+  buildDir: "dist"
+  runCommand: "npx serve -s dist --listen 3000"
+
+ports:
+  - protocol: "HTTPS"
+    targetProtocol: "HTTP"
+    listeningPort: "443"
+    targetPort: "3000"
+    targetIP: "172.17.0.1"
+    public: true
+    path: "/"
