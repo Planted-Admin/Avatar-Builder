@@ -3,7 +3,7 @@ import { useEffect } from 'react';
 
 const AssetsBox = () => {
     const { categories, currentCategory, fetchCategories, setCurrentCategory } = 
-    useConfiguratorStore();
+        useConfiguratorStore();
 
     useEffect(() => {
         fetchCategories();
