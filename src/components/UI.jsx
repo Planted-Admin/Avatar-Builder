@@ -50,7 +50,7 @@ export const UI = () => {
                     className= "pointer-events-auto"
                     href= "https://planted-alpha.vercel.app/login"
                     >
-                        <img className='w-20' src= '/logo.svg' alt= 'Logo'/>
+                        <img className='w-20' src= "/images/Logo Option 1.png" />
                     </a>
                     <DownloadButton />
                 </div>
