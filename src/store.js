@@ -20,5 +20,3 @@ export const useConfiguratorStore = create((set) => ({
   },
   setCurrentCategory: (category) => set({ currentCategory: category }),
 }))
-
-export default useConfiguratorStore;
