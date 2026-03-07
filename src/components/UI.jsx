@@ -16,7 +16,7 @@ const AssetsBox = () => {
                     key={category.id}
                     onClick={() => setCurrentCategory(category)}
                     className={`transition-colors duration-200 font-medium ${
-                        currentCategory === category.className
+                        currentCategory.name === category.name
                         ? "text-indigo-500"
                         : "text-gray-500 hover:text-gray-700"
                     }`}
