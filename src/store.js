@@ -1,30 +1,32 @@
 import { create } from 'zustand'
+import PocketBase from 'pocketbase'
 
-import PocketBase from 'pocketbase';
-
-const pocketbaseUrl = import.meta.env.VITE_POCKETBASE_URL;
-if (!pocketbaseUrl) {
-  throw new Error('VITE_POCKETBASE_URL is not set');
-}
-
-const pb = new PocketBase(pocketbaseUrl);
+const pocketbaseUrl = import.meta.env.VITE_POCKETBASE_URL
+const pb = pocketbaseUrl ? new PocketBase(pocketbaseUrl) : null
 
 export const useConfiguratorStore = create((set) => ({
   categories: [],
   currentCategory: null,
-  assests: [],
+  assets: [],
   fetchCategories: async () => {
-    // you can also fetch all records at once via getFullList
-    const categories = await pb.collection('CustomizationGroups').getFullList({
+    if (!pb) {
+      console.warn('VITE_POCKETBASE_URL is not set; using empty data')
+      return
+    }
+    try {
+      const categories = await pb.collection('CustomizationGroups').getFullList({
         sort: '+position',
-    });
-    const assets = await pb.collection('CustomizationAssets').getFullList({
+      })
+      const assets = await pb.collection('CustomizationAssets').getFullList({
         sort: '-created',
-    });
-
-    set({categories, currentCategory: categories[0], assests});
+      })
+      set({ categories, currentCategory: categories[0] ?? null, assets })
+    } catch (err) {
+      console.error('Failed to fetch categories:', err)
+      set({ categories: [], currentCategory: null, assets: [] })
+    }
   },
-  setcurrentCategory: (category) => set({currentCategory: category}),
-}));
+  setCurrentCategory: (category) => set({ currentCategory: category }),
+}))
 
 export default useConfiguratorStore;
