@@ -9,10 +9,22 @@ if (!pocketbaseUrl) {
 
 const pb = new PocketBase(pocketbaseUrl);
 
-const useConfiguratorStore = create((set) => ({
+export const useConfiguratorStore = create((set) => ({
   categories: [],
   currentCategory: null,
   assests: [],
-  fetchCategories: async () => {},
+  fetchCategories: async () => {
+    // you can also fetch all records at once via getFullList
+    const categories = await pb.collection('CustomizationGroups').getFullList({
+        sort: '+position',
+    });
+    const assets = await pb.collection('CustomizationAssets').getFullList({
+        sort: '-created',
+    });
 
-}))
+    set({categories, currentCategory: categories[0], assests});
+  },
+  setcurrentCategory: (category) => set({currentCategory: category}),
+}));
+
+export default useConfiguratorStore;
