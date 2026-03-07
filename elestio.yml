@@ -1,14 +1,13 @@
-# Elestio deployment config - place this at the ROOT of your Git repository
-# If your repo root is the parent "Avatar Builder" folder, move this file there
-# and ensure install/build/run commands run from the correct directory.
+# Elestio deployment config - place at the ROOT of your Git repository.
+# runTime "docker" = use our Dockerfile (Node 22). Do not use "NodeJs" or Elestio will generate Node 20.
 config:
-  runTime: "NodeJs"
-  version: "22"
-  framework: "Vite"
-  installCommand: "yarn install"
-  buildCommand: "yarn build"
-  buildDir: "dist"
-  runCommand: "npx serve -s dist --listen 3000"
+  runTime: "docker"
+  version: ""
+  framework: ""
+  installCommand: ""
+  buildCommand: ""
+  buildDir: ""
+  runCommand: ""
 
 ports:
   - protocol: "HTTPS"
