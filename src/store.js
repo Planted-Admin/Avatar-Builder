@@ -10,6 +10,7 @@ const useConfiguratorStore = create((set) => ({
   categories: [],
   currentCategory: null,
   assets: [],
+  customization: {},
   fetchCategories: async () => {
 
       const categories = await pb.collection('CustomizationGroups').getFullList({
@@ -18,13 +19,25 @@ const useConfiguratorStore = create((set) => ({
       const assets = await pb.collection('CustomizationAssets').getFullList({
         sort: '-created',
       })
+      const customization = {}
       categories.forEach((category) => {
         category.assets = assets.filter((asset) => asset.group === category.id)
+        customization[category.name] = {}
       })
 
-      set({ categories, currentCategory: categories[0], assets })
+      set({ categories, currentCategory: categories[0], assets, customization })
   },
   setCurrentCategory: (category) => set({ currentCategory: category }),
+  changeAsset: (category, asset) =>
+    set((state) => ({
+        customization: {
+            ...state.customization,
+            [category]: {
+                ...state.customization[category],
+                asset,
+            }
+        }
+    })),
 }))
 
 export { pb, useConfiguratorStore }

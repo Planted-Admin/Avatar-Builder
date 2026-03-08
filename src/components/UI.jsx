@@ -4,8 +4,14 @@ import { pb } from '../store';
 
 
 const AssetsBox = () => {
-    const { categories, currentCategory, fetchCategories, setCurrentCategory } = 
-        useConfiguratorStore();
+    const { 
+        categories, 
+        currentCategory, 
+        fetchCategories, 
+        setCurrentCategory, 
+        changeAsset, 
+        customization,
+    } = useConfiguratorStore();
 
     useEffect(() => {
         fetchCategories();
@@ -28,10 +34,16 @@ const AssetsBox = () => {
                 ))}
             </div>
             <div className='flex gap-2 flex-wrap'>
-                {currentCategory?.assets.map((asset, index) => (
+                {currentCategory?.assets.map((asset) => (
                     <button
-                        key={index}
-                        className={`w-20 h-20 rounded-md overflow-hidden bg-gray-200 pointer-events-auto hover:opacity-100 transition-all border-2 duration-500`}
+                        key={asset.thumbnail}
+                        onClick={() => changeAsset(currentCategory.name, asset)}
+                        className={`w-20 h-20 rounded-md overflow-hidden bg-gray-200 pointer-events-auto hover:opacity-100 transition-all border-2 duration-500
+                            ${
+                                customization[currentCategory?.name]?.asset?.id === asset.id
+                                ? "border-indigo-600 opacity-100"
+                                : "opacity-80 border-transparent"
+                            }`}
                     >
                         <img src={pb.files.getURL(asset, asset.thumbnail)} />
                     </button>
