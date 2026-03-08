@@ -1,5 +1,7 @@
 import { useConfiguratorStore } from '../store';
 import { useEffect } from 'react';
+import { pb } from '../store';
+
 
 const AssetsBox = () => {
     const { categories, currentCategory, fetchCategories, setCurrentCategory } = 
@@ -13,18 +15,28 @@ const AssetsBox = () => {
             <div className="flex items-center gap-6 pointer-events-auto">
                 {categories.map((category) => (
                     <button
-                    key={category.id}
-                    onClick={() => setCurrentCategory(category)}
-                    className={`transition-colors duration-200 font-medium ${
-                        currentCategory.name === category.name
-                        ? "text-indigo-500"
-                        : "text-gray-500 hover:text-gray-700"
-                    }`}
+                        key={category.id}
+                        onClick={() => setCurrentCategory(category)}
+                        className={`transition-colors duration-200 font-medium ${
+                            currentCategory.name === category.name
+                                ? "text-indigo-500"
+                                : "text-gray-500 hover:text-gray-700"
+                        }`}
                     >
-                    {category.name}
+                        {category.name}
                     </button>
                 ))}
-                </div>
+            </div>
+            <div className='flex gap-2 flex-wrap'>
+                {currentCategory?.assets.map((asset, index) => (
+                    <button
+                        key={index}
+                        className={`w-20 h-20 rounded-md overflow-hidden bg-gray-200 pointer-events-auto hover:opacity-100 transition-all border-2 duration-500`}
+                    >
+                        <img src={pb.files.getURL(asset, asset.thumbnail)} />
+                    </button>
+                ))}
+            </div>
         </div>
     );
 };

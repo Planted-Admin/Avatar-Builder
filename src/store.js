@@ -6,7 +6,7 @@ const pocketbaseUrl =
   import.meta.env.VITE_POCKETBASE_URL || 'https://pocketbase-u69392.vm.elestio.app'
 const pb = new PocketBase(pocketbaseUrl)
 
-export const useConfiguratorStore = create((set) => ({
+const useConfiguratorStore = create((set) => ({
   categories: [],
   currentCategory: null,
   assets: [],
@@ -18,7 +18,13 @@ export const useConfiguratorStore = create((set) => ({
       const assets = await pb.collection('CustomizationAssets').getFullList({
         sort: '-created',
       })
+      categories.forEach((category) => {
+        category.assets = assets.filter((asset) => asset.group === category.id)
+      })
+
       set({ categories, currentCategory: categories[0], assets })
   },
   setCurrentCategory: (category) => set({ currentCategory: category }),
 }))
+
+export { pb, useConfiguratorStore }
