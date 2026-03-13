@@ -11,11 +11,30 @@ const AssetsBox = () => {
         setCurrentCategory, 
         changeAsset, 
         customization,
+        fetchError,
+        clearFetchError,
     } = useConfiguratorStore();
 
     useEffect(() => {
         fetchCategories();
     }, []);
+
+    if (fetchError) {
+        return (
+            <div className="rounded-2xl bg-white drop-shadow-md p-6 gap-4 flex flex-col max-w-md">
+                <p className="text-red-600 font-medium">Could not load customization data</p>
+                <p className="text-sm text-gray-600 break-all">{fetchError}</p>
+                <button
+                    type="button"
+                    onClick={() => { clearFetchError(); fetchCategories(); }}
+                    className="rounded-lg bg-indigo-500 hover:bg-indigo-600 text-white font-medium px-4 py-2 pointer-events-auto w-fit"
+                >
+                    Retry
+                </button>
+            </div>
+        );
+    }
+
     return (
         <div className="rounded-2xl bg-white drop-shadow-md p-6 gap-6 flex flex-col">
             <div className="flex items-center gap-6 pointer-events-auto">
@@ -24,7 +43,7 @@ const AssetsBox = () => {
                         key={category.id}
                         onClick={() => setCurrentCategory(category)}
                         className={`transition-colors duration-200 font-medium ${
-                            currentCategory.name === category.name
+                            currentCategory?.name === category.name
                                 ? "text-indigo-500"
                                 : "text-gray-500 hover:text-gray-700"
                         }`}
@@ -34,18 +53,18 @@ const AssetsBox = () => {
                 ))}
             </div>
             <div className='flex gap-2 flex-wrap'>
-                {currentCategory?.assets.map((asset) => (
+                {(currentCategory?.assets ?? []).map((asset) => (
                     <button
-                        key={asset.thumbnail}
+                        key={asset.id ?? asset.thumbnail}
                         onClick={() => changeAsset(currentCategory.name, asset)}
                         className={`w-20 h-20 rounded-md overflow-hidden bg-gray-200 pointer-events-auto hover:opacity-100 transition-all border-2 duration-500
                             ${
-                                customization[currentCategory?.name]?.asset?.id === asset.id
+                                (customization[currentCategory?.name]?.asset?.id ?? customization[currentCategory?.name]?.id) === asset.id
                                 ? "border-indigo-600 opacity-100"
                                 : "opacity-80 border-transparent"
                             }`}
                     >
-                        <img src={pb.files.getURL(asset, asset.thumbnail)} />
+                        <img src={asset?.thumbnail ? pb.files.getUrl(asset, asset.thumbnail) : ''} alt="" />
                     </button>
                 ))}
             </div>
@@ -54,8 +73,12 @@ const AssetsBox = () => {
 };
 
 const DownloadButton = () => {
+
+    const download = useConfiguratorStore((state) => state.download)
     return (
-       <button className="rounded-lg bg-indigo-500 hover:bg-indigo-600 transition-colors duration-300 text-white font-medium px-4 py-3 pointer-events-auto">
+       <button className="rounded-lg bg-indigo-500 hover:bg-indigo-600 transition-colors duration-300 text-white font-medium px-4 py-3 pointer-events-auto"
+       onClick={download}
+       >
         Download
         </button>
     );
